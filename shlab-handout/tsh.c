@@ -295,11 +295,9 @@ int builtin_cmd(char **argv) {
  */
 void do_bgfg(char **argv) {
     struct job_t *job_ptr;
-    pid_t jobid;
+    int jid;
     pid_t pid;
 
-    // bg job send SIGCONT signal to the background job
-    // fg job send a SIGCONT signal to the foreground job
     if (argv[1] == NULL) {
         printf("%s command requires PID or %%jobid argument\n", argv[0]);
         return;
@@ -308,22 +306,33 @@ void do_bgfg(char **argv) {
         printf("%s: argument must be a PID or %%jobid\n", argv[0]);
         return;
     }
-    if (argv[1][0] == '%') {
-        jobid = atoi(argv[1] + 1);
-        job_ptr = getjobjid(jobs, jobid);
+
+    if (sscanf(argv[1], "%%%d", &jid) > 0) { // Read jid
+        job_ptr = getjobjid(jobs, jid);
         if (job_ptr == NULL) {
-            printf("%s: No such job\n", argv[1]);
+            printf("%%%d: No such job\n", jid);
+            return;
+        }
+    } else if (sscanf(argv[1], "%d", &pid) > 0) { // Read pid
+        job_ptr = getjobpid(jobs, pid);
+        if (job_ptr == NULL) {
+            printf("(%d): No such process\n", pid);
             return;
         }
     } else {
-        pid = atoi(argv[1]);
-        job_ptr = getjobpid(jobs, pid);
-        if (job_ptr == NULL) {
-            printf("(%s): No such process\n", argv[1]);
-            return;
-        }
+        printf("%s command requires PID or %%jobid argument\n", argv[0]);
+        return;
     }
-    kill(-(job_ptr->pid), SIGCONT);
+    kill(-(job_ptr->pid), SIGCONT);  // SIGCONT --> process continue
+    if (strcmp(argv[0], "bg") == 0) {
+        job_ptr->state = BG;
+        printf("[%d] (%d) %s", job_ptr->jid, job_ptr->pid, job_ptr->cmdline);
+    } else { // "fg"
+        kill(-(job_ptr->pid), SIGCONT);
+        job_ptr->state = FG;
+        // Convet to foreground process
+        waitfg(job_ptr->pid);
+    }
     return;
 }
 
@@ -407,7 +416,14 @@ void sigint_handler(int sig) {
  *     the user types ctrl-z at the keyboard. Catch it and suspend the
  *     foreground job by sending it a SIGTSTP.
  */
-void sigtstp_handler(int sig) { return; }
+void sigtstp_handler(int sig) {
+    int olderrno = errno;
+    pid_t pid = fgpid(jobs);
+    if (pid != 0)
+        kill(-pid, SIGTSTP);
+    errno = olderrno;
+    return;
+}
 
 /*********************
  * End signal handlers
@@ -557,7 +573,7 @@ void listjobs(struct job_t *jobs) {
  * Other helper routines
  ***********************/
 
-/*
+/**
  * usage - print a help message
  */
 void usage(void) {
@@ -576,7 +592,7 @@ void unix_error(char *msg) {
     exit(1);
 }
 
-/*
+/**
  * app_error - application-style error routine
  */
 void app_error(char *msg) {
@@ -584,7 +600,7 @@ void app_error(char *msg) {
     exit(1);
 }
 
-/*
+/**
  * Signal - wrapper for the sigaction function
  */
 handler_t *Signal(int signum, handler_t *handler) {
@@ -598,7 +614,7 @@ handler_t *Signal(int signum, handler_t *handler) {
     return (old_action.sa_handler);
 }
 
-/*
+/**
  * sigquit_handler - The driver program can gracefully terminate the
  *    child shell by sending it a SIGQUIT signal.
  */
