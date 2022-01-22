@@ -31,6 +31,10 @@ pid_t shell_pgid;
 
 int cmd_exit(struct tokens* tokens);
 int cmd_help(struct tokens* tokens);
+int cmd_pwd(struct tokens* tokens);
+int cmd_cd(struct tokens* tokens);
+
+void execute(struct tokens* tokens);
 
 /* Built-in command functions take token array (see parse.h) and return int */
 typedef int cmd_fun_t(struct tokens* tokens);
@@ -45,6 +49,8 @@ typedef struct fun_desc {
 fun_desc_t cmd_table[] = {
     {cmd_help, "?", "show this help menu"},
     {cmd_exit, "exit", "exit the command shell"},
+    {cmd_pwd, "pwd", "print the current working directory to standard output"},
+    {cmd_cd, "cd", "changes current working directory to token"}
 };
 
 /* Prints a helpful description for the given command */
@@ -55,12 +61,33 @@ int cmd_help(unused struct tokens* tokens) {
 }
 
 /* Exits this shell */
-int cmd_exit(unused struct tokens* tokens) { exit(0); }
+int cmd_exit(unused struct tokens* tokens) {
+    exit(0);
+}
+
+/* Print the current working directory */
+int cmd_pwd(unused struct tokens* tokens) {
+    char buf[BUFSIZ];
+    if (getcwd(buf, BUFSIZ - 1) == NULL) {
+        perror("getcwd");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(stdout, "%s\n", buf);
+    return 1;
+}
+
+/* changes current working directory to token */
+int cmd_cd(struct tokens* tokens) {
+    char *path = tokens_get_token(tokens, 1);
+    chdir(path);
+    return 1;
+}
 
 /* Looks up the built-in command, if it exists. */
 int lookup(char cmd[]) {
     for (unsigned int i = 0; i < sizeof(cmd_table) / sizeof(fun_desc_t); i++)
-        if (cmd && (strcmp(cmd_table[i].cmd, cmd) == 0)) return i;
+        if (cmd && (strcmp(cmd_table[i].cmd, cmd) == 0))
+            return i;
     return -1;
 }
 
@@ -92,6 +119,10 @@ void init_shell() {
     }
 }
 
+void execute(struct tokens* tokens) {
+    // char argv[MAX]
+}
+
 int main(unused int argc, unused char* argv[]) {
     init_shell();
 
@@ -111,8 +142,17 @@ int main(unused int argc, unused char* argv[]) {
         if (fundex >= 0) {
             cmd_table[fundex].fun(tokens);
         } else {
-            /* REPLACE this to run commands as programs. */
-            fprintf(stdout, "This shell doesn't know how to run programs.\n");
+            // Run commands as program
+            pid_t pid;
+            if (tokens_get_length(tokens) != 0) {
+                if ((pid = fork()) == 0) {
+                    // execvp(tokens_get_token(tokens, 0), );
+                    execute(tokens);
+                } else {
+                    wait(NULL);
+                }
+                fprintf(stdout, "This shell doesn't know how to run programs.\n");
+            }
         }
 
         if (shell_is_interactive)
