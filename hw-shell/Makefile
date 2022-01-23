@@ -1,7 +1,7 @@
 SRCS=shell.c tokenizer.c
 EXECUTABLES=shell
 
-CC=gcc
+CC=dcc
 CFLAGS=-g3 -Wall -std=gnu99
 
 OBJS=$(SRCS:.c=.o)

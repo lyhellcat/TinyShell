@@ -1,0 +1,9 @@
+C allows the programmer to write directly to memory unlike most of other programming languages.
+Key constructs in C such as pointers and arrays are designed to structure and manipulate memory in
+a machine-independent fashion. Thirty two Keywords in C are also called as reserved words such as
+char, int, float, goto and void. C gives control over the memory layout of data structures! Dynamic
+memory allocation in C is under the control of the programmer unlike languages like Java and Perl
+that shield the programmer from memory allocation and pointers. This can be useful since dealing
+with memory allocation when building a high-level program is a highly error-prone process. C
+provides a uniform interface when dealing with low-level code such as the part of the OS that
+controls a device. Do these capabilities exist in most other languages? Answer is no.

@@ -1,0 +1,92 @@
+Ass1
+COMP20005_a2
+COMP20005_a2.c
+a.out
+a.txt
+asgn3
+cache_locality
+cache_locality.c
+exampleShell
+exampleShell.tar
+find
+flexible.c
+foo.txt
+hw2
+input.txt
+makefile
+mysh
+mysh.c
+mysh_test.c
+piping
+piping.c
+popSequence
+popSequence.c
+q4
+q4_1.c
+q4_1.py
+q4_2.c
+redirect
+redirect_test.c
+shell
+shell.c
+shell_old.c
+strings
+strings.cpp
+temp
+temp.c
+tempCodeRunnerFile
+tempCodeRunnerFile.c
+test
+test.c
+test.sh
+test0.txt
+test1.txt
+test2.sh
+total 672
+drwxr-xr-x  7 hellcat hellcat   4096 Dec  6 20:21 .
+drwxr-xr-x 31 hellcat hellcat   4096 Dec  6 12:39 ..
+drwxr-xr-x  2 hellcat hellcat   4096 Oct  9 14:54 .vscode
+drwxr-xr-x  2 hellcat hellcat   4096 Oct 22 00:16 Ass1
+-rwxr-xr-x  1 hellcat hellcat  17512 Oct 11 11:18 COMP20005_a2
+-rw-r--r--  1 hellcat hellcat   4475 Oct 11 11:18 COMP20005_a2.c
+-rwxr-xr-x  1 hellcat hellcat  22872 Nov  2 08:32 a.out
+-rw-r--r--  1 hellcat hellcat   3153 Dec  6 19:56 a.txt
+drwxr-xr-x  2 hellcat hellcat   4096 Nov  4 00:12 asgn3
+-rwxr-xr-x  1 hellcat hellcat  17304 Nov  2 15:58 cache_locality
+-rw-r--r--  1 hellcat hellcat   3223 Nov  2 15:56 cache_locality.c
+drwxr-xr-x  2 hellcat hellcat   4096 Dec  2 17:09 exampleShell
+-rw-r--r--  1 hellcat hellcat  10240 May 18  2004 exampleShell.tar
+-rwxr--r--  1 hellcat hellcat  31680 Oct 10 23:45 find
+-rw-r--r--  1 hellcat hellcat    588 Oct  9 18:26 flexible.c
+-rw-r--r--  1 hellcat hellcat    423 Dec  6 20:21 foo.txt
+drwxr-xr-x  2 hellcat hellcat   4096 Oct 10 22:03 hw2
+-rw-r--r--  1 hellcat hellcat      4 Dec  6 16:51 input.txt
+-rw-r--r--  1 hellcat hellcat     75 Nov  1 20:39 makefile
+-rwxr-xr-x  1 hellcat hellcat 129304 Dec  6 20:21 mysh
+-rw-r--r--  1 hellcat hellcat   6043 Dec  6 20:21 mysh.c
+-rw-r--r--  1 hellcat hellcat  22429 Dec  6 16:18 mysh_test.c
+-rwxr-xr-x  1 hellcat hellcat  17064 Oct  9 19:12 piping
+-rw-r--r--  1 hellcat hellcat    895 Oct  9 19:16 piping.c
+-rwxr-xr-x  1 hellcat hellcat  16808 Oct  9 20:57 popSequence
+-rw-r--r--  1 hellcat hellcat   1116 Oct  9 20:56 popSequence.c
+-rwxr-xr-x  1 hellcat hellcat  16696 Oct  9 18:52 q4
+-rw-r--r--  1 hellcat hellcat    361 Oct  9 18:54 q4_1.c
+-rw-r--r--  1 hellcat hellcat    199 Oct  9 19:03 q4_1.py
+-rw-r--r--  1 hellcat hellcat    376 Oct  9 19:08 q4_2.c
+-rwxr-xr-x  1 hellcat hellcat 105416 Dec  6 17:03 redirect
+-rw-r--r--  1 hellcat hellcat    613 Dec  6 17:03 redirect_test.c
+-rwxr-xr-x  1 hellcat hellcat  37952 Nov  2 11:51 shell
+-rw-r--r--  1 hellcat hellcat   4646 Nov  2 11:51 shell.c
+-rw-r--r--  1 hellcat hellcat   9851 Nov  1 20:40 shell_old.c
+-rwxr-xr-x  1 hellcat hellcat  17400 Oct 10 18:30 strings
+-rw-r--r--  1 hellcat hellcat    544 Oct 10 18:30 strings.cpp
+-rwxr-xr-x  1 hellcat hellcat    167 Oct 10 20:58 temp
+-rw-r--r--  1 hellcat hellcat    171 Oct 21 11:10 temp.c
+-rwxr-xr-x  1 hellcat hellcat  17296 Oct 21 17:14 tempCodeRunnerFile
+-rw-r--r--  1 hellcat hellcat   1557 Oct 21 17:14 tempCodeRunnerFile.c
+-rwxr-xr-x  1 hellcat hellcat  16952 Oct 10 20:58 test
+-rw-r--r--  1 hellcat hellcat    850 Oct 10 20:58 test.c
+-rwxr--r--  1 hellcat hellcat    299 Nov  2 18:55 test.sh
+-rw-r--r--  1 hellcat hellcat    569 Oct 11 08:28 test0.txt
+-rw-r--r--  1 hellcat hellcat     57 Oct 11 11:12 test1.txt
+-rwxr--r--  1 hellcat hellcat    126 Nov  2 19:11 test2.sh

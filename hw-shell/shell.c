@@ -13,6 +13,9 @@
 
 #include "tokenizer.h"
 
+#define IO_INPUT  1
+#define IO_OUTPUT 2
+
 /* Convenience macro to silence compiler warnings about unused function
  * parameters. */
 #define unused __attribute__((unused))
@@ -45,6 +48,15 @@ typedef struct fun_desc {
     char* cmd;
     char* doc;
 } fun_desc_t;
+
+// Input arguments type
+typedef struct parsed_args {
+    char ***args_arr;
+    size_t *args_len;
+    int *io_idxs;
+    int *io_tags;
+    size_t proc_num;
+} parsed_args_t;
 
 fun_desc_t cmd_table[] = {
     {cmd_help, "?", "show this help menu"},
@@ -91,6 +103,60 @@ int lookup(char cmd[]) {
     return -1;
 }
 
+/* Get proc nums for command */
+size_t tokens_get_proc_num(struct tokens *tokens) {
+    size_t tokens_len = tokens_get_length(tokens);
+    size_t proc_num = 1;
+    // If the tokens contain "|", it means there are multiple processes
+    for (size_t i = 0; i < tokens_len; i++) {
+        if (strcmp(tokens_get_token(tokens, i), "|") == 0) {
+            proc_num++;
+        }
+    }
+    return proc_num;
+}
+
+/* Parse shell commands and convert to shell args */
+parsed_args_t* parse_args(struct tokens *tokens) {
+    size_t token_len = tokens_get_length(tokens);
+    size_t proc_num = tokens_get_proc_num(tokens);
+
+    parsed_args_t *parsed_args = calloc(1, sizeof(parsed_args_t));
+    parsed_args->args_arr = calloc(proc_num, sizeof(char **));
+    parsed_args->args_len = calloc(proc_num, sizeof(size_t) * proc_num);
+    parsed_args->io_idxs = calloc(proc_num, sizeof(int) * proc_num);
+    parsed_args->io_tags = calloc(proc_num, sizeof(int) * proc_num);
+
+    size_t idx = 0;
+    for (size_t i = 0; i != proc_num; i++) {
+        size_t j;
+        for (j = idx; j != token_len; j++) {
+            parsed_args->args_len[i]++;
+            if (strcmp(tokens_get_token(tokens, j), "|") == 0)
+                break;
+        }
+        parsed_args->args_arr[i] = calloc(1, parsed_args->args_len[i] * sizeof(char *));
+        for (j = idx; j != token_len; j++) {
+            char* token = tokens_get_token(tokens, j);
+            if (strcmp(token, "|") == 0) {
+                break;
+            } else {
+                parsed_args->args_arr[i][j - idx] = token;
+            }
+            if (strcmp(token, ">") == 0) {
+                parsed_args->io_tags[i] = IO_OUTPUT;
+                parsed_args->io_idxs[i] = j - idx;
+            } else if (strcmp(token, "<") == 0) {
+                parsed_args->io_tags[i] = IO_INPUT;
+                parsed_args->io_idxs[i] = j - idx;
+                printf("%d\n", parsed_args->io_idxs[i]);
+            }
+        }
+        idx = j + 1;
+    }
+    return parsed_args;
+}
+
 /* Intialization procedures for this shell */
 void init_shell() {
     /* Our shell is connected to standard input. */
@@ -120,7 +186,7 @@ void init_shell() {
 }
 
 void execute(struct tokens* tokens) {
-    // char argv[MAX]
+    parse_args(tokens);
 }
 
 int main(unused int argc, unused char* argv[]) {
@@ -145,12 +211,12 @@ int main(unused int argc, unused char* argv[]) {
             // Run commands as program
             pid_t pid;
             if (tokens_get_length(tokens) != 0) {
-                if ((pid = fork()) == 0) {
-                    // execvp(tokens_get_token(tokens, 0), );
-                    execute(tokens);
-                } else {
-                    wait(NULL);
-                }
+                execute(tokens);
+                // if ((pid = fork()) == 0) {
+                //     execute(tokens);
+                // } else {
+                //     wait(NULL);
+                // }
                 fprintf(stdout, "This shell doesn't know how to run programs.\n");
             }
         }
