@@ -20,8 +20,8 @@ typedef struct command {
     char *args[ARGS_NUM];
     int args_count;
     bool is_background;
-    bool left_redirect;
-    bool right_redirect;
+    bool do_input_redirect;
+    bool do_output_redirect;
     bool double_right_redirect;
     char redirect_file[FILE_PATH_LEN];
 
@@ -59,7 +59,7 @@ void paerse(char *line, command_t *cmd) {
                 continue;
             }
         } else if (strcmp(token, "<") == 0) {
-            cmd->left_redirect = true;
+            cmd->do_input_redirect = true;
             token = strtok(NULL, s);
             if (token == NULL) {
                 fprintf(stderr, "Error: Missing filename for input redirection.\n");
@@ -68,7 +68,7 @@ void paerse(char *line, command_t *cmd) {
             }
             strcpy(cmd->redirect_file, token);
         } else if (strcmp(token, ">") == 0) {
-            cmd->right_redirect = true;
+            cmd->do_output_redirect = true;
             token = strtok(NULL, s);
             if (token == NULL) {
                 fprintf(stderr,
@@ -164,7 +164,7 @@ void ExcuteCommand(command_t cmd) {
         pid_t pid = fork();
         if (pid == 0) {
             // consider file redirect
-            if (cmd.right_redirect) {
+            if (cmd.do_output_redirect) {
                 // O_TRUNC, truncate the existing file so that its length is 0
                 int fd = open(cmd.redirect_file, O_CREAT | O_WRONLY | O_TRUNC,
                               S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -178,7 +178,7 @@ void ExcuteCommand(command_t cmd) {
                     exit(EXIT_FAILURE);
                 }
             }
-            if (cmd.left_redirect) {
+            if (cmd.do_input_redirect) {
                 int fd = open(cmd.redirect_file, O_CREAT | O_RDONLY,
                               S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
                 if (fd == -1) {

@@ -135,7 +135,8 @@ parsed_args_t* parse_args(struct tokens *tokens) {
             if (strcmp(tokens_get_token(tokens, j), "|") == 0)
                 break;
         }
-        parsed_args->args_arr[i] = calloc(1, parsed_args->args_len[i] * sizeof(char *));
+        // + 1 consider NULL
+        parsed_args->args_arr[i] = calloc(1, (parsed_args->args_len[i] + 1) * sizeof(char *));
         for (j = idx; j != token_len; j++) {
             char* token = tokens_get_token(tokens, j);
             if (strcmp(token, "|") == 0) {

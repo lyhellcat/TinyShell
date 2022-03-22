@@ -1,5 +1,4 @@
 #define _GNU_SOURCE
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -89,6 +88,13 @@ handler_t *Signal(int signum, handler_t *handler) {
     return (old_action.sa_handler);
 }
 
+/**
+ * @brief Execute builtin command, if is buildtin cmd return true
+ *        else return false
+ * @param cmd
+ * @return true
+ * @return false
+ */
 bool builtin_cmd(command_t* cmd) {
     if (strcmp(cmd->argv[0], "exit") == 0) {
         exit(0);
